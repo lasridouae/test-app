@@ -1,0 +1,116 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <!-- content-header component -->
+        <app-content-header [contentHeader]="contentHeader"></app-content-header>
+
+        <!-- <app-filter [paramInOut]="paramInOut"></app-filter> -->
+
+   
+     <section id="ngx-datatable-kitchen-sink">
+        <div class="card">
+            <div class="row py-1">
+                <div class="col-md-6 col-12">
+                    <!-- <button class="btn btn-primary ml-1" rippleEffect (click)="createItemSideBar()">
+                        <i data-feather="plus" class="mr-0 mr-sm-1"></i><span class="d-none d-sm-inline-block">Add
+                            New
+                            Service</span>
+                    </button> -->
+
+                
+             
+
+                </div>
+                <div class="col-md-6 col-12 d-flex justify-content-md-end">
+                    <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pl-1 pl-md-0 pb-md-0">
+                        <label class="d-flex align-items-center">Chercher<input type="search" placeholder="Search"
+                                class="form-control ml-25" (keyup)="filterUpdate($event)"
+                                (search)="filterUpdate($event)" /></label>
+                    </div>
+                    <a (click)="this.exportData.exportAsExcelFile(cashes,'Cashes')" class="btn btn-outline-secondary float-right mr-1" rippleEffect
+                    >Exporter Excel</a>
+                </div>
+            </div>
+          
+            <ngx-datatable *ngIf="this.content_loaded == true" class="bootstrap core-bootstrap" [headerHeight]="40" [rowHeight]="58" [limit]="10"
+                [columnMode]="ColumnMode.force" [footerHeight]="50" [rows]="cashes" [scrollbarH]="true">
+                <ngx-datatable-column [width]="100" name="Name" prop="name">
+                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                        let-row="row">
+                        <div title="Double click to edit">
+                            <div class="d-flex align-items-center">
+                                <div class="cell-line-height">
+                                    <p class="font-medium-1 line-height-1 mb-0">{{ paramInOut == 'in'?  row.fournisseur.name :row.client.name }}</p>
+                                    <span class="text-muted font-small-2"> {{ paramInOut == 'in'?  row.fournisseur.cin :row.client.cin }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <!-- <ngx-datatable-column [width]="100" name="Nom" prop="name">
+                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row"
+                        let-value="value">
+                        <div title="Double click to edit">
+                            <p class="font-medium-1 line-height-1 mb-0">{{ row.client.name }}</p>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column> -->
+                <ngx-datatable-column [width]="100" name="date payment" prop="date_payment">
+                    <ng-template ngx-datatable-cell-template let-value="value" let-rowIndex="rowIndex"
+                        let-row="row">
+                        <div title="Double click to edit">
+                            {{ value | date }}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [width]="20" name="amount" prop="amount" >
+                    <ng-template ngx-datatable-cell-template let-value="value" let-rowIndex="rowIndex"
+                        let-row="row">
+                        <div title="Double click to edit">
+                            {{ value }}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [width]="20" name="order_id" prop="order_id" >
+                    <ng-template ngx-datatable-cell-template let-value="value" let-rowIndex="rowIndex"
+                        let-row="row">
+                        <div title="Double click to edit">
+                            {{ value }}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <!-- <ngx-datatable-column name="Actions" [width]="50" [sortable]="false">
+                    <ng-template ngx-datatable-cell-template let-value="value" let-rowIndex="rowIndex"
+                        let-row="row">
+                        <div class="d-flex align-items-center">
+                            <div ngbDropdown container="body">
+                                <a ngbDropdownToggle href="javascript:void(0);" class="hide-arrow"
+                                    id="dropdownBrowserState" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    <i data-feather="more-vertical" class="text-primary cursor-pointer mr-50"></i>
+                                </a>
+                                <div ngbDropdownMenu class="dropdown-menu-right"
+                                    aria-labelledby="dropdownBrowserState">
+                                    <a ngbDropdownItem (click)="deleteItem(row.id)"
+                                        class="d-flex align-items-center"><i data-feather="trash-2"
+                                            class="mr-50"></i> Delete</a>
+                                </div>
+                            </div>
+                            <a (click)="setItemSideBar(row.id)">
+                                <i data-feather="edit" class="text-primary cursor-pointer"></i>
+                            </a>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column> -->
+            </ngx-datatable>
+
+            <!-- loading Card -->
+            <div class="card h-100 shadow-none" *ngIf="this.content_loaded == false">
+                <div class="card-body d-flex justify-content-center align-items-center ">
+                    <app-loading-card></app-loading-card>
+                </div>
+            </div>
+            <!-- / loading Card -->
+        </div>
+    </section>
+    </div>
+</div>

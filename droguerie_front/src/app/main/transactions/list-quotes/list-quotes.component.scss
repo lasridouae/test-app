@@ -1,0 +1,14 @@
+@import '@core/scss/angular/libs/datatables.component.scss';
+@import '@core/scss/angular/libs/toastr.component.scss';
+@import '@core/scss/angular/libs/select.component.scss';
+@import '@core/scss/angular/libs/flatpickr.component.scss';
+
+.datatable-scroll {
+  width: auto !important;
+}
+
+// datatable-header-cell, datatable-body-cell{
+//   display: flex !important;
+//   justify-content: center;
+//   align-items: center;
+// }

@@ -1,0 +1,310 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <section class="invoice-add-wrapper">
+            <div class="row invoice-add" *ngIf="this.content_loaded == true">
+                <!-- Invoice Add Left starts -->
+                <div class="col-xl-9 col-md-8 col-12">
+                    <div class="card invoice-preview-card">
+                        <!-- Header starts -->
+                        <div class="card-body invoice-padding pb-0">
+                            <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
+                                <div>
+                                    <span class="brand-logo">
+                                        <img src="{{ appLogoImage }}" alt="brand-logo" width="100" />
+                                      </span>
+                                    <p class="card-text mb-25 text-align-justify p-adresse-app mt-1">{{this.setting.appAdresse ? this.setting.appAdresse : 'Lot El Wahda Laayoune'}}</p>
+                                    <p class="card-text mb-0">Tél: {{this.setting.appPhone1 ? this.setting.appPhone1 : ''}} , {{this.setting.appPhone2 ? this.setting.appPhone2 : ''}}</p>
+                                    <p class="card-text mb-0">Fix: {{this.setting.appFixe ? this.setting.appFixe : ''}}</p>
+                                </div>
+                                <div class="invoice-number-date mt-md-0 mt-2">
+                                    <div class="d-flex align-items-center justify-content-md-end mb-1">
+                                        <h4 class="invoice-title">{{paramType}}</h4>
+                                        <div class="input-group input-group-merge invoice-edit-input-group disabled">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <i data-feather="hash"></i>
+                                                </div>
+                                            </div>
+                                            <input type="text" class="form-control invoice-edit-input" value="ID"
+                                                placeholder="ID" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-1">
+                                        <span class="title">Date:</span>
+                                        <ng2-flatpickr [config]="dateOptions" name="Date"
+                                            [(ngModel)]="this.order.date"></ng2-flatpickr>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <span class="title">Date d'échéance:</span>
+                                        <input type="text" class="form-control invoice-edit-input" value=""
+                                            placeholder="" disabled />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Header ends -->
+
+                        <hr class="invoice-spacing" />
+
+                        <!-- Address and Contact starts -->
+                        <div class="card-body invoice-padding pt-0" *ngIf="this.paramType != 'simple_sale'">
+                            <div class="row row-bill-to invoice-spacing">
+                                <div class="col-xl-12 mb-lg-1 col-bill-to pl-0">
+                                    <h6 class="invoice-to-title">{{paramType}} To:</h6>
+                                    <div class="invoice-customer">
+                                        <ng-select [items]="clients ? clients : fournisseurs" [(ngModel)]="customerSelected" name="customerSelected"
+                                            bindLabel="name" #select>
+                                            <ng-template ng-header-tmp>
+                                                <button
+                                                    class="add-new-customer btn btn-flat-success cursor-pointer rounded-0 text-left p-50 w-100"
+                                                    (click)="createItemSideBar(); select.blur(); select.close()">
+                                                    <i data-feather="plus"></i>
+                                                    <span class="align-middle ml-25" *ngIf="clients && !fournisseurs">Ajouter nouveau client</span>
+                                                    <span class="align-middle ml-25" *ngIf="!clients && fournisseurs">Ajouter nouveau fournisseur</span>
+                                                </button>
+                                            </ng-template>
+
+                                            <ng-template ng-option-tmp let-item="item" bindValue="customerSelected"
+                                                bindLabel="name">
+                                                {{ item.name }}
+                                            </ng-template>
+                                        </ng-select>
+                                        <div class="customer-details mt-1">
+                                            <p class="mb-25 font-weight-bolder">{{ customerSelected?.name }}</p>
+                                            <p class="mb-25">{{ customerSelected?.cin }}</p>
+                                            <p class="mb-25">{{ customerSelected?.email }}</p>
+                                            <p class="mb-25">{{ customerSelected?.adresse }}</p>
+                                            <p class="mb-0">{{ customerSelected?.phone }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Address and Contact ends -->
+
+                        <!-- Product Details starts -->
+                        <div class="card-body invoice-padding invoice-product-details">
+                            <form class="source-item validate-form mt-2" id="formItemsOrder"
+                                (ngSubmit)="(ItemsOrder.form.valid)" #ItemsOrder="ngForm">
+                                <div data-repeater-list="group-a">
+                                    <div class="repeater-wrapper" data-repeater-item
+                                        *ngFor="let orderDetail of orderDetails; let i = index"
+                                        (change)="onChangeItems()">
+                                        <div class="row">
+                                            <div class="col-12 d-flex product-details-border position-relative pr-0">
+                                                <div class="row w-100 pr-lg-0 pr-1 py-2">
+                                                    <div class="col-lg-4 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                                        <p class="card-text col-title mb-md-50 mb-0">Produit</p>
+                                                        <ng-select [items]="products" [(ngModel)]="orderDetail.product"
+                                                            [ngModelOptions]="{standalone: true}" #FProductRef="ngModel"
+                                                            required>
+                                                            <ng-template ng-option-tmp ng-label-tmp let-item="item"
+                                                                bindLabel="name" bindValue="item">
+                                                                <img class="rounded-circle mr-1"
+                                                                [src]="this.item.photos ? USER_IMAGE_PATH + this.item.photos : 'assets/images/default_images/simple_product.png'"
+                                                                    alt="product-photo" height="32" width="32" />
+                                                                {{ item.name }}
+                                                            </ng-template>
+                                                        </ng-select>
+                                                        <span *ngIf="ItemsOrder.submitted && FProductRef.invalid"
+                                                            class="invalid-form">
+                                                            <small class="form-text text-danger"
+                                                                *ngIf="FProductRef.errors.required">Ce champ est obligatoire!</small>
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                                        <p class="card-text col-title mb-md-2 mb-0">Qty</p>
+                                                        <input type="number" class="form-control input-qty" id="quantity{{ i }}"
+                                                            name="quantity{{ i }}" [(ngModel)]="orderDetail.quantity"
+                                                            placeholder="0" min="1"
+                                                            max="{{ orderDetail.product ? orderDetail.product.stock : 0 }}"
+                                                            #FQtyRef="ngModel" required />
+                                                        <span *ngIf="ItemsOrder.submitted && FQtyRef.invalid"
+                                                            class="invalid-form">
+                                                            <small class="form-text text-danger"
+                                                                *ngIf="FQtyRef.errors.required">Ce champ est obligatoire!</small>
+                                                        </span>
+
+                                                    </div>
+
+                                                    <div class="col-lg-2 col-12 mt-lg-0 mt-2" > <!--*ngIf="!orderDetail.product"-->
+                                                        <p class="card-text col-title mb-md-50 mb-0">Prix</p>
+                                                        <p class="card-text mb-0">{{orderDetail.product ?
+                                                            orderDetail.product.unit_price + ' MAD' : ''}} </p>
+                                                    </div>
+
+                                                    <div class="col-lg-2 col-12 my-lg-0 my-2" >
+                                                        <p class="card-text col-title mb-md-2 mb-0">Réduction</p>
+                                                        <input type="number" class="form-control" id="discount{{ i }}"
+                                                            name="discount{{ i }}" [(ngModel)]="orderDetail.discount" min="0"
+                                                            #FDiscountRef="ngModel" required />
+                                                        <span *ngIf="ItemsOrder.submitted && FDiscountRef.invalid"
+                                                            class="invalid-form">
+                                                            <small class="form-text text-danger"
+                                                                *ngIf="FDiscountRef.errors.required">Ce champ est obligatoire!</small>
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="col-lg-2 col-12 mt-lg-0 mt-2">
+                                                        <p class="card-text col-title mb-md-50 mb-0">Total</p>
+                                                        <p class="card-text mb-0">{{orderDetail.product &&
+                                                            orderDetail.quantity ? ( orderDetail.product.unit_price - orderDetail.discount ) *
+                                                            orderDetail.quantity : ''}} MAD</p>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
+                                                    <button (click)="deleteItem(i)" class="btn p-0">
+                                                        <i data-feather="x" [size]="18" class="cursor-pointer"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-1">
+                                    <div class="col-12 px-0">
+                                        <button type="button" class="btn btn-primary btn-sm btn-add-new"
+                                            (click)="addItem()" rippleEffect>
+                                            <i data-feather="plus" class="mr-25"></i>
+                                            <span class="align-middle">Add Produit</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div *ngIf="this.paramType != 'simple_sale'"
+                                    class="d-flex flex-row align-items-end justify-content-end border-left invoice-product-actions py-50 px-25">
+                                    <div class="mt-2 mr-5">
+                                        <span>Réduction(MAD): </span>
+                                        <span class="discount">{{discountOrder}} </span><br>
+                                        <span>Tax(%): </span>
+                                        <span class="tax-1 ml-50" data-toggle="tooltip" data-placement="top" title="Tax"
+                                          >{{taxOrder}}%</span>
+                                      </div>
+                                    
+                                    <div ngbDropdown class="dropdown" #discountDropdown="ngbDropdown">
+                                        <button class="cursor-pointer more-options-dropdown mr-0 btn p-0 hide-arrow"
+                                            id="dropdownMenuButton" role="button" type="button" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false" ngbDropdownToggle>
+                                            <i data-feather="settings"></i>
+                                        </button>
+                                        <div ngbDropdownMenu
+                                            class="dropdown-menu dropdown-menu-right item-options-menu p-1"
+                                            aria-labelledby="dropdownMenuButton">
+                                            <div class="form-group">
+                                                <label for="discount-input" class="form-label">Réduction (MAD)</label>
+                                                <input type="number" class="form-control" id="discount-input" [(ngModel)]="discountOrder" name="discountOrder"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="tax-input" class="form-label">tax(%)</label>
+                                                <input type="number" class="form-control" id="tax-input" min="0" max="100" placeholder="20%" name="taxOrder" [(ngModel)]="taxOrder"/>
+                                            </div>
+                                            <div class="dropdown-divider my-1"></div>
+                                            <div class="d-flex justify-content-between">
+                                                <button type="button" (click)="discountDropdown.close()"
+                                                    class="btn btn-outline-primary btn-apply-changes" rippleEffect>
+                                                    Appliquer
+                                                </button>
+                                                <button type="button" (click)="discountDropdown.close()"
+                                                    class="btn btn-outline-secondary" rippleEffect>
+                                                    Annuler
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                        <!-- Product Details ends -->
+
+                        <!-- Invoice Total starts -->
+                        <div class="card-body invoice-padding">
+                            <div class="row justify-content-end invoice-sales-total-wrapper">
+
+                                <div class="col-md-6 d-flex justify-content-end order-md-2 order-1">
+                                    <div class="invoice-total-wrapper">
+                                      <div class="invoice-total-item" *ngIf="this.paramType != 'simple_sale'">
+                                        <p class="invoice-total-title">Sou-total:</p>
+                                        <p class="invoice-total-amount">{{sub_total_order}} MAD</p>
+                                      </div>
+                                      <div class="invoice-total-item" *ngIf="this.paramType != 'simple_sale'">
+                                        <p class="invoice-total-title">Réduction:</p>
+                                        <p class="invoice-total-amount">{{discountOrder}} MAD</p>
+                                      </div>
+                                      <div class="invoice-total-item" *ngIf="this.paramType != 'simple_sale'">
+                                        <p class="invoice-total-title">Tax:</p>
+                                        <p class="invoice-total-amount">{{taxOrder}}%</p>
+                                      </div>
+                                      <hr class="my-50" />
+                                      <div class="invoice-total-item">
+                                        <p class="invoice-total-title">Total:</p>
+                                        <p class="invoice-total-amount">{{( this.sub_total_order - this.discountOrder ) + ( this.sub_total_order * this.taxOrder )/100}} MAD</p>
+                                      </div>
+                                    </div>
+                                  </div>
+                            </div>
+                        </div>
+                        <!-- Invoice Total ends -->
+
+                        <hr class="invoice-spacing mt-0" />
+
+                        <div class="card-body invoice-padding py-0" *ngIf="type_transaction == 'invoice'">
+                            <!-- Invoice Note starts -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group mb-2">
+                                        <label for="note" class="form-label font-weight-bold">Remarque:</label>
+                                        <textarea class="form-control" rows="2" id="note" name="notes" 
+                                            [(ngModel)]="this.quote.notes">{{this.quote.notes}}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Invoice Note ends -->
+                        </div>
+                    </div>
+                </div>
+                <!-- Invoice Add Left ends -->
+
+                <!-- Invoice Add Right starts -->
+                <div class="col-xl-3 col-md-4 col-12 mt-md-0 mt-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <button type="submit" class="btn btn-primary btn-block mb-75" form="formItemsOrder"
+                                (click)="submitOrder(ItemsOrder)" rippleEffect>Enregistrer</button>
+                            <a class="btn btn-outline-secondary btn-block mb-75" routerLink="/transactions/{{paramType}}/list"
+                                rippleEffect>
+                                Retour
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Invoice Add Right ends -->
+            </div>
+
+            <!-- loading Card -->
+            <div class="card h-100 shadow-none" *ngIf="this.content_loaded == false">
+                <div class="card-body d-flex justify-content-center align-items-center ">
+                    <app-loading-card></app-loading-card>
+                </div>
+            </div>
+            <!-- / loading Card -->
+
+        </section>
+    </div>
+
+    <!-- New Client Sidebar -->
+    <core-sidebar class="modal modal-slide-in sidebar-todo-modal fade" name="client-sidebar-right"
+        overlayClass="modal-backdrop">
+        <app-client-sidebar-right (dataEvent)="receiveData($event)"></app-client-sidebar-right>
+    </core-sidebar>
+    <!--/ New Client Sidebar -->
+
+    
+    <!-- New Fournisseur Sidebar -->
+    <core-sidebar class="modal modal-slide-in sidebar-todo-modal fade" name="fournisseur-sidebar-right"
+        overlayClass="modal-backdrop">
+        <app-fournisseur-sidebar-right (dataEvent)="receiveData($event)"></app-fournisseur-sidebar-right>
+    </core-sidebar>
+    <!--/ New Fournisseur Sidebar -->
+</div>

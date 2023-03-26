@@ -1,0 +1,164 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <!-- content-header component -->
+        <app-content-header [contentHeader]="contentHeader"></app-content-header>
+
+        <div class="card">
+            <div class="card-body">
+                <!-- header media -->
+                <div class="media">
+                    <a href="javascript:void(0);" class="mr-25">
+                        <img [src]="this.previewLogo ? this.previewLogo : this.setting.appLogoImage ? USER_IMAGE_PATH + this.setting.appLogoImage : 'assets/images/logo/logo.svg'"
+                            class="rounded mr-50" alt="profile image" height="76" width="80" />
+                    </a>
+                    <!-- upload and reset button -->
+                    <div class="media-body mt-75 ml-1">
+                        <button (click)="file.click()" for="account-upload" class="btn btn-sm btn-primary mb-75 mr-75"
+                            rippleEffect>
+                            Charger
+                        </button>
+                        <button (click)="removeTypeImg('logo')" for="account-upload" class="btn btn-sm btn-danger mb-75 mr-75" *ngIf=" this.setting.appLogoImage"
+                            rippleEffect>
+                            Supprimer logo 
+                        </button>
+                        <input type="file" #file id="account-upload" hidden accept="image/*"
+                            (change)="selectFileLogo($event)" />
+                        <!-- <button class="btn btn-sm btn-outline-secondary mb-75" rippleEffect>Reset</button> -->
+                        <p>Charger JPG, GIF or PNG. Taille Max 800kB - 430x300 px</p>
+                        
+                    </div>
+                    
+                    <!--/ upload and reset button -->
+                </div>
+
+                <div id="" class="mt-1" *ngIf="uploadingLogo">
+                    <div class="progress-wrapper">
+                        <div class="mb-25">Chargement Logo &hellip; {{ this.progressLogo }}%</div>
+                        <ngb-progressbar type="primary" [value]="this.progressLogo"></ngb-progressbar>
+                    </div>
+                </div>
+                <!--/ header media -->
+
+                <!-- form -->
+                <form class="validate-form mt-2" *ngIf="content_loaded == true" (ngSubmit)="(SettingsForm.form.valid)"
+                    #SettingsForm="ngForm">
+                    <div class="row">
+                        <div class="col-12 col-sm-6">
+                            <div class="form-group">
+                                <label for="name">Nom de l'application</label>
+                                <input type="text" [(ngModel)]="this.setting.appName" class="form-control" id="appName"
+                                    name="appName" placeholder="App Name"
+                                    [class.error]="SettingsForm.submitted && FappNameRef.invalid" #FappNameRef="ngModel"
+                                    required aria-label="App Name" aria-describedby="basic-icon-default-name2" />
+                                <span *ngIf="SettingsForm.submitted && FappNameRef.invalid" class="invalid-form">
+                                    <small class="form-text text-danger" *ngIf="FappNameRef.errors.required">Ce champ est obligatoire!</small>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <div class="form-group">
+                                <label for="name">Titre de l'application</label>
+                                <input type="text" [(ngModel)]="this.setting.appTitle" class="form-control"
+                                    id="appTitle" name="appTitle" placeholder="App Title Name"
+                                    [class.error]="SettingsForm.submitted && FappTitleRef.invalid"
+                                    #FappTitleRef="ngModel" required aria-label="App Title Name"
+                                    aria-describedby="basic-icon-default-name2" />
+                                <span *ngIf="SettingsForm.submitted && FappTitleRef.invalid" class="invalid-form">
+                                    <small class="form-text text-danger" *ngIf="FappTitleRef.errors.required">Ce champ est obligatoire!</small>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-4">
+                            <div class="form-group">
+                                <label for="name">Téléphone 1</label>
+                                <input type="tel" [(ngModel)]="this.setting.appPhone1" class="form-control"
+                                    id="appPhone1" name="appPhone1" placeholder="Phone 1" />
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-4">
+                            <div class="form-group">
+                                <label for="name">Téléphone 2</label>
+                                <input type="tel" [(ngModel)]="this.setting.appPhone2" class="form-control"
+                                    id="appPhone2" name="appPhone2" placeholder="Phone2" />
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-4">
+                            <div class="form-group">
+                                <label for="name">Fixe</label>
+                                <input type="tel" [(ngModel)]="this.setting.appFixe" class="form-control" id="appFixe"
+                                    name="appFixe" placeholder="Fixe" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="form-label" for="appAdresse">Adresse</label>
+                                <textarea class="form-control dt-adresse" id="appAdresse" rows="3"
+                                    placeholder="Center Adresse" name="appAdresse"
+                                    [(ngModel)]="this.setting.appAdresse">{{this.setting.appAdresse}}</textarea>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-2">
+                            <div class="border rounded p-2">
+                                <h4 class="mb-1">Page d'authentification en arrière-plan</h4>
+                                <div class="media flex-column flex-md-row">
+                                    <img id="blog-feature-image" width="170" height="110" alt="Background Login page"
+                                        class="rounded mr-2 mb-1 mb-md-0"
+                                        [src]="this.previewBg ? this.previewBg : this.setting.appBgLoginImage ? USER_IMAGE_PATH + this.setting.appBgLoginImage : 'assets/images/pages/login-v2.svg'">
+                                    <div
+                                        class="media-body d-flex justify-content-between align-items-start flex-column">
+                                        <small class="text-muted">1100x700 px /Charger JPG, GIF orPNG.</small>
+                                        <div class="d-inline-block">
+                                            <div class="form-group mb-0">
+                                                <div class="custom-file">
+                                                    <div class="media-body mt-75 ml-1">
+                                                        <button (click)="file.click()" for="account-upload"
+                                                            class="btn btn-sm btn-primary mb-75 mr-75" rippleEffect>
+                                                            Charger
+                                                        </button>
+                                                        <input type="file" #file id="account-upload" hidden
+                                                            accept="image/*" (change)="selectFileBg($event)" />
+                                                        <button (click)="removeTypeImg('background')" for="account-upload" class="btn btn-sm btn-danger mb-75 mr-75" *ngIf=" this.setting.appBgLoginImage"
+                                                            rippleEffect>
+                                                            Supprimer Background 
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div id="" class="mt-1" *ngIf="uploadingBg">
+                                            <div class="progress-wrapper">
+                                                <div class="mb-25">Chargement Image &hellip; {{ this.progressBg }}%</div>
+                                                <ngb-progressbar type="primary"
+                                                    [value]="this.progressBg"></ngb-progressbar>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary mt-2 mr-1" rippleEffect
+                                [disabled]="uploadingLogo && uploadingBg" (click)="editSetting(SettingsForm)">Enregister modifications</button>
+                            <button type="reset" class="btn btn-outline-secondary mt-2" rippleEffect
+                                [disabled]="uploadingLogo && uploadingBg" routerLink="/users/list">Annuler</button>
+                        </div>
+                        <!--/ Developer Meetup Card -->
+                    </div>
+                </form>
+                <!--/ form -->
+            </div>
+        </div>
+
+        <!-- loading Card -->
+        <div *ngIf="(content_loaded == false || !this.setting)" class="add-new-user modal-content pt-0">
+            <div class="card h-100 shadow-none">
+                <div class="card-body d-flex justify-content-center align-items-center ">
+                    <app-loading-card></app-loading-card>
+
+                </div>
+            </div>
+        </div>
+        <!--/ loading Card -->
+    </div>
+</div>

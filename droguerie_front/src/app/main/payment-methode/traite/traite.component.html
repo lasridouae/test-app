@@ -1,0 +1,183 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <!-- content-header component -->
+        <app-content-header [contentHeader]="contentHeader"></app-content-header>
+
+     <!-- <app-filter [paramInOut]="paramInOut" [content_loaded]="content_loaded"></app-filter> -->
+
+        <!-- Row Details  Datatables -->
+    <section id="ngx-datatable-row-details">
+        <div class="card">
+            <!-- <core-card-snippet >
+          <h4 class="card-title">Traites</h4> -->
+  
+          <!-- ngx-datatable-row-details -->
+          <div class="row py-1">
+            <div class="col-md-6 col-12">
+                <!-- <button class="btn btn-primary ml-1" rippleEffect (click)="createItemSideBar()">
+                    <i data-feather="plus" class="mr-0 mr-sm-1"></i><span class="d-none d-sm-inline-block">Add
+                        New
+                        Service</span>
+                </button> -->
+
+            
+         
+
+            </div>
+            <div class="col-md-6 col-12 d-flex justify-content-md-end">
+                <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pl-1 pl-md-0 pb-md-0">
+                    <label class="d-flex align-items-center">Chercher<input type="search" placeholder="Search"
+                            class="form-control ml-25" (keyup)="filterUpdate($event)"
+                            (search)="filterUpdate($event)" /></label>
+                </div>
+                <a (click)="this.exportData.exportAsExcelFile(traites,'Traites',traites,'traite_details','traite_details')" class="btn btn-outline-secondary float-right mr-1" rippleEffect
+                >Exporter Excel</a>
+            </div>
+        </div>
+          <ngx-datatable *ngIf="this.content_loaded == true"
+            #tableRowDetails
+            class="bootstrap core-bootstrap"
+            [columnMode]="ColumnMode.force"
+            [headerHeight]="40"
+            [footerHeight]="50"
+            [rowHeight]="58"
+            [limit]="10"
+            [rows]="traites"
+            [scrollbarH]="true"
+           
+          >
+            <!-- Row Detail Template -->
+            <ngx-datatable-row-detail [rowHeight]="'100%'">
+              <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+                <div class="ml-75 pl-5 pt-75">
+                    <div class="table-responsive">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th>Montant</th>
+                              <th>date_approche</th>
+                              <th>Reste</th>
+                              <th>payment_status</th>
+                              <th>Status</th>
+                              <!-- <th>Actions</th> -->
+                            </tr>
+                          </thead>
+                          <tbody>
+                           
+                     
+                    
+                            <tr *ngFor="let item of row.traite_details">
+                              <td>
+                            <span class="font-weight-bold">{{item.amount}}</span>
+                              </td>
+                              <td>{{item.approaching_date | date}}</td>
+                              <td>
+                                <div *ngIf="(this.dataService.compareDates(item.approaching_date)) > 10 && item.payment_status != 'paid'" class="badge badge-warning">{{ this.dataService.compareDates(item.approaching_date) + ' days'}}</div>
+                                <div *ngIf="(this.dataService.compareDates(item.approaching_date)) < 10 && item.payment_status != 'paid'" class="badge badge-danger">{{ this.dataService.compareDates(item.approaching_date) + ' days'}}</div>
+                                <div *ngIf="item.payment_status == 'paid'" class="badge badge-success">--</div>
+                            </td>
+                         
+                              <td>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="status{{item.id}}"  (change)="updateStatus(item,$event)"
+                                        [checked]="item.payment_status == 'paid' ? true : false "/>
+                                        <label class="custom-control-label" for="status{{item.id}}">
+                                        <span class="switch-icon-left"><i data-feather="check"></i></span>
+                                        <span class="switch-icon-right"><i data-feather="x"></i></span>
+                                    </label>
+                                </div>
+                              </td>
+                              <td>
+                                <div *ngIf="item.payment_status == 'unpaid'" class="badge badge-danger">{{ item.payment_status }}</div>
+                                <div *ngIf="item.payment_status == 'paid'" class="badge badge-success">{{ item.payment_status }}</div>
+                                <!-- <span class="badge badge-pill badge-light-warning mr-1">{{ item.payment_status }}</span> -->
+                            </td>
+                              <!-- <td class="overflow-hidden">
+                                <div ngbDropdown container="body">
+                                  <button type="button" class="btn btn-sm hide-arrow" ngbDropdownToggle data-toggle="dropdown">
+                                    <i data-feather="more-vertical"></i>
+                                  </button>
+                                  <div ngbDropdownMenu>
+                                    <a ngbDropdownItem href="javascript:void(0);"
+                                      ><i data-feather="edit-2" class="mr-50"></i><span>Edit</span></a
+                                    ><a ngbDropdownItem href="javascript:void(0);"
+                                      ><i data-feather="trash" class="mr-50"></i><span>Delete</span></a
+                                    >
+                                  </div>
+                                </div>
+                              </td> -->
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                </div>
+              </ng-template>
+            </ngx-datatable-row-detail>
+            <ngx-datatable-column
+              [width]="50"
+              [resizeable]="false"
+              [sortable]="false"
+              [draggable]="false"
+              [canAutoResize]="false"
+            >
+              <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                <a
+                  href="javascript:void(0)"
+                  class="text-body"
+                  [class.datatable-icon-right]="!expanded"
+                  [class.datatable-icon-down]="expanded"
+                  title="Expand/Collapse Row"
+                  (click)="rowDetailsToggleExpand(row)"
+                >
+                </a>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Name" prop="full_name" [width]="280">
+              <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                <div class="d-flex align-items-center">
+                  <div class="cell-line-height">
+                    <p class="font-medium-1 line-height-1 mb-0">{{ paramInOut == 'in'?  row.fournisseur.name :row.client.name }}</p>
+                    <span class="text-muted font-small-2"> {{ paramInOut == 'in'?  row.fournisseur.cin :row.client.cin }}</span>
+                  </div>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="grand_total" prop="grand_total" [width]="250">
+                <ng-template ngx-datatable-cell-template let-value="value" let-rowIndex="rowIndex"
+                let-row="row">
+                <div title="Double click to edit">
+                    {{ row.order.grand_total }}
+                </div>
+            </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="payment_status" prop="payment_status" [width]="50">
+                <ng-template ngx-datatable-cell-template let-value="value" let-rowIndex="rowIndex"
+                let-row="row">
+                <div title="Double click to edit">
+                    <div *ngIf="value == 'unpaid'" class="badge badge-danger">{{ value }}</div>
+                    <div *ngIf="value == 'paid'" class="badge badge-success">{{ value }}</div>
+                </div>
+            </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="amount_paid" prop="amount_paid" [width]="120">
+                <ng-template ngx-datatable-cell-template let-value="value" let-rowIndex="rowIndex"
+                let-row="row">
+                <div title="Double click to edit">
+                    {{ row.amount_paid }}
+                </div>
+            </ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable>
+          <!-- ngx-datatable-row-details -->
+               <!-- loading Card -->
+               <div class="card h-100 shadow-none" *ngIf="this.content_loaded == false">
+                <div class="card-body d-flex justify-content-center align-items-center ">
+                    <app-loading-card></app-loading-card>
+                </div>
+            </div>
+            <!-- / loading Card -->
+        </div>
+      </section>
+      <!-- Row Details  Datatables -->
+    </div>
+</div>

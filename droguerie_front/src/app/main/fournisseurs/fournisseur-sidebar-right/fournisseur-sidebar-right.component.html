@@ -1,0 +1,114 @@
+<div class="slideout-content">
+    <!-- Modal to add new user starts-->
+    <div class="modalsd modal-slide-in sdfade new-user-modal" id="modals-slide-in">
+      <div class="modal-dialog">
+        <form class="add-new-user modal-content pt-0" *ngIf="content_loaded == true" (ngSubmit)="(FournisseurForm.form.valid)" #FournisseurForm="ngForm">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="toggleSidebar(this.sideBarComponent)"
+          >
+            ×
+          </button>
+          <div class="modal-header mb-1">
+            <h5 class="modal-title" id="exampleModalLabel">Fournisseur Form</h5>
+          </div>
+          <div class="modal-body flex-grow-1">
+            <div class="form-group">
+              <label class="form-label" for="basic-icon-default-fullname">Full Name</label>
+              <input
+                type="text"
+                class="form-control dt-full-name"
+                id="basic-icon-default-fullname"
+                placeholder="John Doe"
+                name="name"
+                [(ngModel)]="this.fournisseur.name"
+                [class.error]="FournisseurForm.submitted && FNameRef.invalid"
+                #FNameRef="ngModel"
+                required
+                aria-label="John Doe"
+                aria-describedby="basic-icon-default-fullname2"
+              />
+              <span *ngIf="FournisseurForm.submitted && FNameRef.invalid" class="invalid-form">
+                <small class="form-text text-danger" *ngIf="FNameRef.errors.required">This field is required!</small>
+              </span>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="basic-icon-default-phone">Phone</label>
+                <input
+                  type="text"
+                  class="form-control dt-full-name"
+                  id="basic-icon-default-phone"
+                  placeholder="06********"
+                  name="phone"
+                  [(ngModel)]="this.fournisseur.phone"
+                  [class.error]="FournisseurForm.submitted && FNameRef.invalid"
+                  #FNameRef="ngModel"
+                  required
+                  aria-label="06********"
+                  aria-describedby="basic-icon-default-fullname2"
+                />
+                <span *ngIf="FournisseurForm.submitted && FNameRef.invalid" class="invalid-form">
+                  <small class="form-text text-danger" *ngIf="FNameRef.errors.required">This field is required!</small>
+                </span>
+              </div>
+            <div class="form-group">
+              <label class="form-label" for="basic-icon-default-email">Email</label>
+              <input
+                type="text"
+                id="basic-icon-default-email"
+                class="form-control dt-email"
+                placeholder="john.doe@example.com"
+                aria-label="john.doe@example.com"
+                aria-describedby="basic-icon-default-email2"
+                name="email"
+                [(ngModel)]="this.fournisseur.email"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="basic-icon-default-cin">CIN</label>
+              <input
+                type="text"
+                class="form-control dt-full-name"
+                id="basic-icon-default-fullname"
+                placeholder="BHxxxxxx"
+                name="cin"
+                [(ngModel)]="this.fournisseur.cin"
+                aria-label="john.doe@example.com"
+                aria-describedby="basic-icon-default-cin2"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="basicTextarea">Adresse</label>
+                <textarea class="form-control dt-adresse" id="basicTextarea" rows="3" placeholder="Adresse of Fournisseur" name="adresse" [(ngModel)]="this.fournisseur.adresse">{{this.fournisseur.adresse}}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary mr-1" *ngIf="isDataEmpty === true" (click)="addFournisseur(FournisseurForm)" rippleEffect>Add</button>
+            <button type="submit" class="btn btn-primary mr-1" *ngIf="isDataEmpty === false" (click)="editFournisseur(FournisseurForm)" rippleEffect>Update</button>
+            <button
+              type="reset"
+              class="btn btn-outline-secondary"
+              (click)="toggleSidebar(this.sideBarComponent)"
+              rippleEffect
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+
+        <!-- loading Card -->
+      <div *ngIf="content_loaded == false"  class="add-new-user modal-content pt-0">
+        <div class="card h-100 shadow-none">
+          <div class="card-body d-flex justify-content-center align-items-center ">
+            <app-loading-card></app-loading-card>
+          </div>
+        </div>
+      </div>
+      <!--/ loading Card -->
+
+      </div>
+    </div>
+    <!-- Modal to add new user Ends-->
+  </div>
+  

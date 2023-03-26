@@ -1,0 +1,165 @@
+    <!-- Miscellaneous Charts -->
+    <div  class="row ">
+        <!-- Bar Chart -Orders -->
+        <div class="col-lg-2 col-6">
+          <div class="card">
+            <div class="card-body pb-50">
+              <h6>Orders</h6>
+              <h2 class="font-weight-bolder mb-1">{{ orders }}</h2>
+              <div id="statistics-bar-chart" #statisticsBarRef>
+                <!-- Apexchart component-->
+
+                <apx-chart
+                *ngIf="this.content_loaded == true"
+                  [series]="statisticsBar.series"
+                  [chart]="{
+                    height: 70,
+                    width: isMenuToggled === false ? statisticsBarRef.offsetWidth : statisticsBar.chart.width,
+                    type: 'bar',
+                    stacked: true,
+                    toolbar: {
+                      show: false
+                    }
+                  }"
+                  [tooltip]="statisticsBar.tooltip"
+                  [colors]="statisticsBar.colors"
+                  [dataLabels]="statisticsBar.dataLabels"
+                  [grid]="statisticsBar.grid"
+                  [plotOptions]="statisticsBar.plotOptions"
+                  [dataLabels]="statisticsBar.dataLabels"
+                  [xaxis]="statisticsBar.xaxis"
+                  [yaxis]="statisticsBar.yaxis"
+                ></apx-chart>
+              </div>
+                           <!-- loading Card -->
+          <div class="card h-100 shadow-none" *ngIf="this.content_loaded == false">
+            <div class="card-body d-flex justify-content-center align-items-center ">
+                <app-loading-card></app-loading-card>
+            </div>
+        </div>
+        <!-- / loading Card -->
+            </div>
+          </div>
+        </div>
+        <!--/ Bar Chart -->
+
+        <!-- Line Chart - Profit -->
+        <div class="col-lg-2 col-6">
+          <div class="card">
+            <div class="card-body pb-50">
+              <h6>Vantes</h6>
+              <h2 class="font-weight-bolder mb-1">{{ salles }}</h2>
+              <div id="statistics-line-chart" #statisticsLineRef>
+                <apx-chart
+                *ngIf="this.content_loaded == true"
+                  [chart]="{
+                    height: 70,
+                    width: isMenuToggled === false ? statisticsLineRef.offsetWidth : statisticsLine.chart.width,
+                    type: 'line',
+                    toolbar: {
+                      show: false
+                    },
+                    zoom: {
+                      enabled: false
+                    }
+                  }"
+                  [grid]="statisticsLine.grid"
+                  [stroke]="statisticsLine.stroke"
+                  [colors]="statisticsLine.colors"
+                  [series]="statisticsLine.series"
+                  
+                  [xaxis]="statisticsLine.xaxis"
+                  [yaxis]="statisticsLine.yaxis"
+                  
+                ></apx-chart>
+                <!-- [markers]="statisticsLine.markers" -->
+                <!-- [tooltip]="statisticsLine.tooltip" -->
+              </div>
+                   <!-- loading Card -->
+          <div class="card h-100 shadow-none" *ngIf="this.content_loaded == false">
+            <div class="card-body d-flex justify-content-center align-items-center ">
+                <app-loading-card></app-loading-card>
+            </div>
+        </div>
+        <!-- / loading Card -->
+            </div>
+          </div>
+        </div>
+        <!--/ Line Chart -->
+        <div class="col-lg-8 col-12">
+          <div  *ngIf="this.content_loaded == true" class="card card-statistics">
+            <div class="card-header">
+              <h4 class="card-title">Statistiques</h4>
+              <!-- <div class="d-flex align-items-center">
+                <p class="card-text mr-25 mb-0">title</p>
+              </div> -->
+            </div>
+            <div class="card-body statistics-body">
+              <div class="row">
+                <div class="col-md-3 col-sm-6 col-12 mb-2 mb-md-0">
+                  <div class="media">
+                    <div class="avatar bg-light-primary mr-2">
+                      <div class="avatar-content">
+                        <i data-feather="user" class="avatar-icon"></i>
+                      </div>
+                    </div>
+                    <div class="media-body my-auto">
+                      <h4 class="font-weight-bolder mb-0">{{ fournisseurs }}</h4>
+                      <p class="card-text font-small-3 mb-0">Fournisseurs</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3 col-sm-6 col-12 mb-2 mb-md-0">
+                  <div class="media">
+                    <div class="avatar bg-light-info mr-2">
+                      <div class="avatar-content">
+                        <i data-feather="user" class="avatar-icon"></i>
+                      </div>
+                    </div>
+                    <div class="media-body my-auto">
+                      <h4 class="font-weight-bolder mb-0">{{ purchases }}</h4>
+                      <p class="card-text font-small-3 mb-0">Achats</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3 col-sm-6 col-12 mb-2 mb-sm-0">
+                  <div class="media">
+                    <div class="avatar bg-light-danger mr-2">
+                      <div class="avatar-content">
+                        <i data-feather="box" class="avatar-icon"></i>
+                      </div>
+                    </div>
+                    <div class="media-body my-auto">
+                      <h4 class="font-weight-bolder mb-0">{{ products }}</h4>
+                      <p class="card-text font-small-3 mb-0">Produits</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3 col-sm-6 col-12">
+                  <div class="media">
+                    <div class="avatar bg-light-success mr-2">
+                      <div class="avatar-content">
+                        <i data-feather="user" class="avatar-icon"></i>
+                      </div>
+                    </div>
+                    <div class="media-body my-auto">
+                      <h4 class="font-weight-bolder mb-0">{{ clients }}</h4>
+                      <p class="card-text font-small-3 mb-0">Clients</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+                      <!-- loading Card -->
+                      <div class="card h-100 shadow-none" *ngIf="this.content_loaded == false">
+                        <div class="card-body d-flex justify-content-center align-items-center ">
+                            <app-loading-card></app-loading-card>
+                        </div>
+                    </div>
+                    <!-- / loading Card -->
+        </div>
+        
+      </div>
+      
+      <!--/ Miscellaneous Charts -->

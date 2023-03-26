@@ -1,0 +1,224 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <section class="invoice-preview-wrapper">
+            <div class="row invoice-preview"   *ngIf="this.content_loaded == true">
+                <!-- Invoice -->
+                <div class="col-xl-9 col-md-8 col-12 printRef" id="invoiceDiv" #invoiceDiv>
+                    <div class="card invoice-preview-card">
+                        <div class="card-body invoice-padding pb-0">
+                            <!-- Header Starts -->
+                            <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
+                                <div>
+                                    <span class="brand-logo">
+                                        <img src="{{ appLogoImage }}" alt="brand-logo" width="100" />
+                                    </span>
+                                    <p class="card-text mb-25 text-align-justify p-adresse-app mt-1">
+                                        {{setting.appAdresse ? setting.appAdresse : 'San Diego County, CA 91905, USA'}}
+                                    </p>
+                                    <p class="card-text mb-0">Tél: {{setting.appPhone1 ? setting.appPhone1 : ''}} ,
+                                        {{setting.appPhone2 ? setting.appPhone2 : ''}}</p>
+                                    <p class="card-text mb-0">Fix: {{setting.appFixe ? setting.appFixe : ''}}</p>
+                                </div>
+                                <div class="mt-md-0 mt-2">
+                                    <h4 class="invoice-title">
+                                        {{paramType}} #{{type_transaction == 'invoice' ? this.quote.id : this.order.id}}
+                                        <span class="invoice-number"></span>
+                                    </h4>
+                                    <div class="invoice-date-wrapper">
+                                        <p class="invoice-date-title">Date de délivrance:</p>
+                                        <p class="invoice-date">{{ order.date }}</p>
+                                    </div>
+                                    <div class="invoice-date-wrapper" *ngIf="quote.due_dat">
+                                        <p class="invoice-date-title">Date d'échéance:</p>
+                                        <p class="invoice-date ">{{ quote.due_date }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Header Ends -->
+                        </div>
+
+                        <hr class="invoice-spacing" />
+
+                        <!-- Address And Contact Starts -->
+                        <div class="card-body invoice-padding pt-0" *ngIf="this.paramType != 'simple_sale'">
+                            <div class="row invoice-spacing">
+                                <div class="col-xl-8 p-0">
+                                    <h6 class="mb-2">{{paramType}} A:</h6>
+                                    <h6 class="mb-25">{{ customer.name }}</h6>
+                                    <!-- <p class="card-text mb-25">CIN: {{ customer.cin }}</p> -->
+                                    <p class="card-text mb-25">{{ customer.email }}</p>
+                                    <p class="card-text mb-25">{{ customer.adresse }}</p>
+                                    <p class="card-text mb-0">{{ customer.phone }}</p>
+                                </div>
+                                <!-- <div class="col-xl-4 p-0 mt-xl-0 mt-2" *ngIf="order.payment_type != '' ">
+                                    <h6 class="mb-2">Payment Details:</h6>
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td class="pr-1">Total Due:</td>
+                                                <td>
+                                                    <span class="font-weight-bold"></span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="pr-1">Bank name:</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="pr-1">Country:</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="pr-1">IBAN:</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="pr-1">SWIFT code:</td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div> -->
+                            </div>
+                        </div>
+                        <!-- Address And Contact Ends -->
+
+                        <!-- Invoice Description Starts -->
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="py-1">Description de la tâche</th>
+                                        <th class="py-1">Prix</th>
+                                        <th class="py-1">Qté</th>
+                                        <th class="py-1">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let orderDetail of orderDetails; let i = index">
+                                        <td class="py-1 d-flex flex-row align-items-center justify-content-start">
+                                            <img class="rounded-circle mr-1"
+                                                [src]="orderDetail.product.photo ? USER_IMAGE_PATH + orderDetail.product.photos : 'assets/images/default_images/simple_product.png'"
+                                                alt="product-photo" height="32" width="32" />
+                                            <p class="card-text text-nowrap">
+                                                {{ orderDetail.product.name }}
+                                            </p>
+                                        </td>
+                                        <td class="py-1">
+                                            <span class="font-weight-bold">{{ orderDetail.product.unit_price - orderDetail.discount }}
+                                                MAD</span>
+                                        </td>
+                                        <td class="py-1">
+                                            <span class="font-weight-bold">{{ orderDetail.quantity }}</span>
+                                        </td>
+                                        <td class="py-1">
+                                            <span class="font-weight-bold">{{ ( orderDetail.product.unit_price - orderDetail.discount ) *
+                                                orderDetail.quantity}} MAD</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="card-body invoice-padding pb-0">
+                            <div class="row invoice-sales-total-wrapper">
+                                <div class="col-md-6 order-md-1 order-2 mt-md-0 mt-3">
+                                    <p class="card-text mb-0">
+                                    </p>
+                                </div>
+                                <div class="col-md-6 d-flex justify-content-end order-md-2 order-1">
+                                    <div class="invoice-total-wrapper">
+                                        <div class="invoice-total-item" *ngIf="this.paramType != 'simple_sale'">
+                                            <p class="invoice-total-title">Sous-total:</p>
+                                            <p class="invoice-total-amount">{{( order.grand_total + order.discount ) - (
+                                                order.grand_total * order.tax )/100}}</p>
+                                        </div>
+                                        <div class="invoice-total-item" *ngIf="this.paramType != 'simple_sale'">
+                                            <p class="invoice-total-title">Réduction:</p>
+                                            <p class="invoice-total-amount">{{ order.discount }} MAD</p>
+                                        </div>
+                                        <div class="invoice-total-item" *ngIf="this.paramType != 'simple_sale'">
+                                            <p class="invoice-total-title">Tax:</p>
+                                            <p class="invoice-total-amount">{{ order.tax }}%</p>
+                                        </div>
+                                        <hr class="my-50" />
+                                        <div class="invoice-total-item">
+                                            <p class="invoice-total-title">Total:</p>
+                                            <p class="invoice-total-amount">{{ order.grand_total }} MAD</p>
+                                        </div>
+                                        <div class="invoice-total-item" *ngIf="this.avance != 0">
+                                            <p class="invoice-total-title">Avance:</p>
+                                            <p class="invoice-total-amount">{{ this.avance }} MAD</p>
+                                        </div>
+                                        <div class="invoice-total-item" *ngIf="this.avance != 0">
+                                            <p class="invoice-total-title">Reste:</p>
+                                            <p class="invoice-total-amount">{{  order.grand_total - this.avance }} MAD</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Invoice Description Ends -->
+
+                        <hr class="invoice-spacing" />
+
+                        <!-- Invoice Note Starts -->
+                        <div class="card-body invoice-padding pt-0" *ngIf="type_transaction == 'invoice'">
+                            <div class="row">
+                                <div class="col-12">
+                                    <span class="font-weight-bold">Remarque: </span>
+                                    <span>{{ quote.notes }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Invoice Note Ends -->
+                    </div>
+                </div>
+                <!--/ Invoice -->
+
+                <!-- Invoice Actions -->
+                <div class="col-xl-3 col-md-4 col-12 invoice-actions mt-md-0 mt-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <button
+                                class="btn btn-primary btn-block mb-75"
+                                data-toggle="modal"
+                                data-target="#send-invoice-sidebar"
+                                (click)="printDiv('printRef')"
+                                rippleEffect
+                            >
+                                Imprimer
+                            </button>
+                            <a *ngIf="paramType != 'invoice'"  class="btn btn-warning btn-block mb-75"
+                                routerLink="/transactions/{{paramType}}/edit/{{ ID_invoice_order }}" rippleEffect>
+                                Modifier
+                            </a>
+                            <a *ngIf="paramType == 'invoice'"  class="btn btn-outline-secondary btn-block mb-75"
+                                routerLink="/transactions/{{paramType}}/edit/{{paramInOut}}/{{ID_invoice_order}}" rippleEffect>
+                                Modifier
+                            </a>
+                            <a class="btn btn-outline-secondary btn-block mb-75" routerLink="/transactions/{{paramType}}/list"
+                                rippleEffect>
+                                Retour
+                            </a>
+                            <!-- <button *ngIf="paramType == 'sale' || paramType == 'purchase' || paramType == 'invoice' " class="btn btn-success btn-block"
+                                data-toggle="modal" data-target="#add-payment-sidebar" rippleEffect>
+                                Payment Method
+                            </button> -->
+                        </div>
+                    </div>
+                </div>
+                <!--/ Invoice Actions -->
+            </div>
+
+            <!-- loading Card -->
+            <div class="card h-100 shadow-none" *ngIf="this.content_loaded == false">
+                <div class="card-body d-flex justify-content-center align-items-center ">
+                    <app-loading-card></app-loading-card>
+                </div>
+            </div>
+            <!-- / loading Card -->
+        </section>
+    </div>
+
+</div>

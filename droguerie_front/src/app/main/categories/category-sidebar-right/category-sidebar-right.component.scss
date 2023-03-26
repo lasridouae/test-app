@@ -1,0 +1,5 @@
+@import "@core/scss/angular/libs/select.component.scss";
+@import "@core/scss/angular/libs/flatpickr.component.scss";
+.ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
+    color: white !important;
+}

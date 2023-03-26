@@ -1,0 +1,77 @@
+<section id="ngx-datatable-kitchen-sink">
+    <div class="card">
+        <div class="header-left" style="padding: 22px 0px 0px 18px;">
+            <h4 class="card-title">{{title}}</h4>
+          </div>
+        <div class="row py-1">
+            <div class="col-md-6 col-12">
+                <button (click)="go()" class="btn btn-danger ml-1" rippleEffect>
+                    <span class="d-none d-sm-inline-block">Voir plus</span><i data-feather="chevron-right" class="mr-0 mr-sm-1"></i>
+                </button>
+
+                <!-- <a csvLink [data]="exportCSVData" class="btn btn-outline-secondary float-right mr-1" rippleEffect
+                    >Export CSV</a> -->
+            </div>
+            <div class="col-md-6 col-12 d-flex justify-content-md-end">
+                <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pl-1 pl-md-0 pb-md-0">
+                    <label class="d-flex align-items-center">Chercher<input type="search" placeholder="Search"
+                            class="form-control ml-25" (keyup)="filterUpdate($event)"
+                            (search)="filterUpdate($event)" /></label>
+                </div>
+            </div>
+        </div>
+        <ngx-datatable  class="bootstrap core-bootstrap" [headerHeight]="40"
+            [rowHeight]="58" [limit]="4" [columnMode]="ColumnMode.force" [footerHeight]="50" [rows]="unpaidInvoces"
+            [scrollbarH]="true">
+            <!-- <ngx-datatable-column [width]="100" name="Name" prop="name">
+                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                            let-row="row">
+                            <div title="Double click to edit">
+                                <div class="d-flex align-items-center">
+                                    <div class="cell-line-height">
+                                        <p class="font-medium-1 line-height-1 mb-0">{{ value }}</p>
+                                        <span class="text-muted font-small-2"> {{ row.cin }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column> -->
+            <ngx-datatable-column [width]="100" name="Date" prop="transaction_date">
+                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row" let-value="value">
+                    <div title="Double click to edit">
+                        <p class="font-medium-1 line-height-1 mb-0">{{ value | date }}</p>
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [width]="100" name="client" prop="client_name">
+                <ng-template ngx-datatable-cell-template let-value="value" let-rowIndex="rowIndex" let-row="row">
+                    <div title="Double click to edit">
+                        {{
+                        row.order[0].fournisseur_id
+                        ? row.order[0].fournisseur.name
+                        : row.order[0].client.name
+                        }}
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [width]="20" name="GRAND TOTAL" prop="grond_total" [width]="120">
+                <ng-template ngx-datatable-cell-template let-value="value" let-rowIndex="rowIndex" let-row="row">
+                    <div title="Double click to edit">
+                        {{ row.order[0].grand_total }}
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [width]="100" name="Status" prop="status" [width]="120">
+                <ng-template ngx-datatable-cell-template let-value="value" let-rowIndex="rowIndex" let-row="row">
+                    <div title="Double click to edit">
+                       
+                        <div *ngIf="row.order[0].payment_status == 'unpaid'" class="badge badge-danger">{{ row.order[0].payment_status }}</div>
+                        <div *ngIf="row.order[0].payment_status == 'paid'" class="badge badge-success">{{ row.order[0].payment_status }}</div>
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+        </ngx-datatable>
+
+ 
+    </div>
+</section>

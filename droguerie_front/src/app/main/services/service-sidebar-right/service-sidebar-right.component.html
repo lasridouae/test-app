@@ -1,0 +1,114 @@
+<div class="slideout-content">
+    <!-- Modal to add new user starts-->
+    <div class="modalsd modal-slide-in sdfade new-user-modal" id="modals-slide-in">
+      <div class="modal-dialog">
+        <form class="add-new-user modal-content pt-0" *ngIf="content_loaded == true" (ngSubmit)="(ServiceForm.form.valid)" #ServiceForm="ngForm">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="toggleSidebar(this.sideBarComponent)"
+          >
+            ×
+          </button>
+          <div class="modal-header mb-1">
+            <h5 class="modal-title" id="exampleModalLabel">Formulaire de service</h5>
+          </div>
+          <div class="modal-body flex-grow-1">
+            <div class="form-group">
+              <label class="form-label" for="basic-icon-default-fullname">Nom de service</label>
+              <input
+                type="text"
+                class="form-control dt-full-name"
+                id="basic-icon-default-fullname"
+                placeholder="nom de service"
+                name="name"
+                [(ngModel)]="this.services.name"
+                [class.error]="ServiceForm.submitted && FNameRef.invalid"
+                #FNameRef="ngModel"
+                required
+                aria-label="nom de service"
+                aria-describedby="basic-icon-default-fullname2"
+              />
+              <span *ngIf="ServiceForm.submitted && FNameRef.invalid" class="invalid-form">
+                <small class="form-text text-danger" *ngIf="FNameRef.errors.required">Ce champ est obligatoire!</small>
+              </span>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="basic-icon-default-phone">Nom de client</label>
+                <input
+                  type="text"
+                  class="form-control dt-full-name"
+                  id="basic-icon-default-phone"
+                  placeholder="nome de client"
+                  name="client_name"
+                  [(ngModel)]="this.services.client_name"
+                  [class.error]="ServiceForm.submitted && FNameRef.invalid"
+                  #FNameRef="ngModel"
+                  required
+                  aria-label="client_name"
+                  aria-describedby="basic-icon-default-fullname2"
+                />
+                <span *ngIf="ServiceForm.submitted && FNameRef.invalid" class="invalid-form">
+                  <small class="form-text text-danger" *ngIf="FNameRef.errors.required">Ce champ est obligatoire!</small>
+                </span>
+              </div>
+            <div class="form-group">
+              <label class="form-label" for="basic-icon-default-email">Prix</label>
+              <input
+                type="number"
+                id="basic-icon-default-email"
+                class="form-control dt-email"
+                placeholder="0.0"
+                aria-label="0.0"
+                aria-describedby="basic-icon-default-email2"
+                name="price"
+                [(ngModel)]="this.services.price"
+              />
+            </div>
+            <!-- <div class="form-group">
+              <label class="form-label" for="basic-icon-default-cin">Description</label>
+              <input
+                type="text"
+                class="form-control dt-full-name"
+                id="basic-icon-default-fullname"
+                placeholder="BHxxxxxx"
+                name="cin"
+                [(ngModel)]="this.services.cin"
+                aria-label="john.doe@example.com"
+                aria-describedby="basic-icon-default-cin2"
+              />
+            </div> -->
+            <div class="form-group">
+              <label class="form-label" for="basicTextarea">Description</label>
+                <textarea class="form-control dt-adresse" id="basicTextarea" rows="3" placeholder="Description" name="description" [(ngModel)]="this.services.description">{{this.services.description}}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary mr-1" *ngIf="isDataEmpty === true" (click)="addService(ServiceForm)" rippleEffect>Ajouter</button>
+            <button type="submit" class="btn btn-primary mr-1" *ngIf="isDataEmpty === false" (click)="editService(ServiceForm)" rippleEffect>Modifier</button>
+            <button
+              type="reset"
+              class="btn btn-outline-secondary"
+              (click)="toggleSidebar(this.sideBarComponent)"
+              rippleEffect
+            >
+              Annuler
+            </button>
+          </div>
+        </form>
+
+        <!-- loading Card -->
+      <div *ngIf="content_loaded == false"  class="add-new-user modal-content pt-0">
+        <div class="card h-100 shadow-none">
+          <div class="card-body d-flex justify-content-center align-items-center ">
+            <app-loading-card></app-loading-card>
+          </div>
+        </div>
+      </div>
+      <!--/ loading Card -->
+
+      </div>
+    </div>
+    <!-- Modal to add new user Ends-->
+  </div>
+  

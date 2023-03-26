@@ -1,0 +1,114 @@
+<div class="slideout-content">
+    <!-- Modal to add new user starts-->
+    <div class="modalsd modal-slide-in sdfade new-user-modal" id="modals-slide-in">
+      <div class="modal-dialog">
+        <form class="add-new-user modal-content pt-0" *ngIf="content_loaded == true" (ngSubmit)="(ClientForm.form.valid)" #ClientForm="ngForm">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="toggleSidebar(this.sideBarComponent)"
+          >
+            ×
+          </button>
+          <div class="modal-header mb-1">
+            <h5 class="modal-title" id="exampleModalLabel">Formilaire Client</h5>
+          </div>
+          <div class="modal-body flex-grow-1">
+            <div class="form-group">
+              <label class="form-label" for="basic-icon-default-fullname">Nom complet</label>
+              <input
+                type="text"
+                class="form-control dt-full-name"
+                id="basic-icon-default-fullname"
+                placeholder="John Doe"
+                name="name"
+                [(ngModel)]="this.client.name"
+                [class.error]="ClientForm.submitted && FNameRef.invalid"
+                #FNameRef="ngModel"
+                required
+                aria-label="John Doe"
+                aria-describedby="basic-icon-default-fullname2"
+              />
+              <span *ngIf="ClientForm.submitted && FNameRef.invalid" class="invalid-form">
+                <small class="form-text text-danger" *ngIf="FNameRef.errors.required">Ce champ est obligatoire!</small>
+              </span>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="basic-icon-default-phone">Téléphone</label>
+                <input
+                  type="text"
+                  class="form-control dt-full-name"
+                  id="basic-icon-default-phone"
+                  placeholder="06********"
+                  name="phone"
+                  [(ngModel)]="this.client.phone"
+                  [class.error]="ClientForm.submitted && FNameRef.invalid"
+                  #FNameRef="ngModel"
+                  required
+                  aria-label="06********"
+                  aria-describedby="basic-icon-default-fullname2"
+                />
+                <span *ngIf="ClientForm.submitted && FNameRef.invalid" class="invalid-form">
+                  <small class="form-text text-danger" *ngIf="FNameRef.errors.required">This field is required!</small>
+                </span>
+              </div>
+            <div class="form-group">
+              <label class="form-label" for="basic-icon-default-email">Email</label>
+              <input
+                type="text"
+                id="basic-icon-default-email"
+                class="form-control dt-email"
+                placeholder="john.doe@example.com"
+                aria-label="john.doe@example.com"
+                aria-describedby="basic-icon-default-email2"
+                name="email"
+                [(ngModel)]="this.client.email"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="basic-icon-default-cin">CIN</label>
+              <input
+                type="text"
+                class="form-control dt-full-name"
+                id="basic-icon-default-fullname"
+                placeholder="BHxxxxxx"
+                name="cin"
+                [(ngModel)]="this.client.cin"
+                aria-label="john.doe@example.com"
+                aria-describedby="basic-icon-default-cin2"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="basicTextarea">Adresse</label>
+                <textarea class="form-control dt-adresse" id="basicTextarea" rows="3" placeholder="Adresse of Client" name="adresse" [(ngModel)]="this.client.adresse">{{this.client.adresse}}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary mr-1" *ngIf="isDataEmpty === true" (click)="addClient(ClientForm)" rippleEffect>Ajouter</button>
+            <button type="submit" class="btn btn-primary mr-1" *ngIf="isDataEmpty === false" (click)="editClient(ClientForm)" rippleEffect>Modifier</button>
+            <button
+              type="reset"
+              class="btn btn-outline-secondary"
+              (click)="toggleSidebar(this.sideBarComponent)"
+              rippleEffect
+            >
+              Annuler
+            </button>
+          </div>
+        </form>
+
+        <!-- loading Card -->
+      <div *ngIf="content_loaded == false"  class="add-new-user modal-content pt-0">
+        <div class="card h-100 shadow-none">
+          <div class="card-body d-flex justify-content-center align-items-center ">
+            <app-loading-card></app-loading-card>
+          </div>
+        </div>
+      </div>
+      <!--/ loading Card -->
+
+      </div>
+    </div>
+    <!-- Modal to add new user Ends-->
+  </div>
+  

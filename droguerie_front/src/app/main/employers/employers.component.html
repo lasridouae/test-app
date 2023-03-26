@@ -1,0 +1,226 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <!-- content-header component -->
+        <app-content-header [contentHeader]="contentHeader"></app-content-header>
+
+        <section id="ngx-datatable-kitchen-sink">
+            <div class="card">
+                <div class="row py-1">
+                    <div class="col-md-6 col-12">
+                        <button class="btn btn-primary ml-1" rippleEffect (click)="createItemSideBar()">
+                            <i data-feather="plus" class="mr-0 mr-sm-1"></i><span class="d-none d-sm-inline-block">Ajouter nouveau employee</span>
+                        </button>
+
+                       
+
+                    </div>
+                    <div class="col-md-6 col-12 d-flex justify-content-md-end">
+                        <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pl-1 pl-md-0 pb-md-0">
+                            <label class="d-flex align-items-center">Search<input type="search" placeholder="Search"
+                                    class="form-control ml-25" (keyup)="filterUpdate($event)"
+                                    (search)="filterUpdate($event)" /></label>
+                        </div>
+                        <a (click)="this.exportData.exportAsExcelFile(employers,'Employers')" class="btn btn-outline-secondary float-right mr-1" rippleEffect
+                        >Export Excel</a>
+                    </div>
+                </div>
+                <ngx-datatable *ngIf="this.content_loaded == true" class="bootstrap core-bootstrap" [headerHeight]="40"
+                    [rowHeight]="58" [limit]="10" [columnMode]="ColumnMode.force" [footerHeight]="50" [rows]="employers"
+                    [scrollbarH]="true">
+                    <ngx-datatable-column [width]="100" name="Name" prop="name">
+                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                            let-row="row">
+                            <div title="Double click to edit">
+                                <div class="d-flex align-items-center">
+                                    <div class="cell-line-height">
+                                        <p class="font-medium-1 line-height-1 mb-0">{{ value }}</p>
+                                        <span class="text-muted font-small-2"> {{ row.cin }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <!-- <ngx-datatable-column [width]="100" name="Nom de service" prop="name">
+                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row"
+                            let-value="value">
+                            <div title="Double click to edit">
+                                <p class="font-medium-1 line-height-1 mb-0">{{ value }}</p>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column> -->
+                    <ngx-datatable-column [width]="150" name="Email" prop="email">
+                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row"
+                            let-value="value">
+                            <div title="Double click to edit">
+                                <p class="font-medium-1 line-height-1 mb-0">{{ value }}</p>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="100" name="Adresse" prop="adresse">
+                        <ng-template ngx-datatable-cell-template let-value="value" let-rowIndex="rowIndex"
+                            let-row="row">
+                            <div title="Double click to edit">
+                                {{ value }}
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="50" name="Phone" prop="phone">
+                        <ng-template ngx-datatable-cell-template let-value="value" let-rowIndex="rowIndex"
+                            let-row="row">
+                            <div title="Double click to edit">
+                                {{ value }}
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="20" name="Salary" prop="salary">
+                        <ng-template ngx-datatable-cell-template let-value="value" let-rowIndex="rowIndex"
+                            let-row="row">
+                            <div title="Double click to edit">
+                                {{ value }}
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="50" name="Status" prop="payment_status">
+                        <ng-template ngx-datatable-cell-template let-value="value" let-rowIndex="rowIndex"
+                            let-row="row">
+                            <div title="Double click to edit">
+                                <div *ngIf="value == 'unpaid'" class="badge badge-secondary">{{ value }}</div>
+                                <div *ngIf="value == 'paid'" class="badge badge-info">{{ value }}</div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="20" name="Rest" prop="rest">
+                        <ng-template ngx-datatable-cell-template let-value="value" let-rowIndex="rowIndex"
+                            let-row="row">
+                            <div title="Double click to edit">
+                                {{ value }}
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Actions" [width]="20" [sortable]="false">
+                        <ng-template ngx-datatable-cell-template let-value="value" let-rowIndex="rowIndex"
+                            let-row="row">
+                            <div class="d-flex align-items-center">
+                                <div ngbDropdown container="body">
+                                    <a ngbDropdownToggle href="javascript:void(0);" class="hide-arrow"
+                                        id="dropdownBrowserState" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">
+                                        <i data-feather="more-vertical" class="text-primary cursor-pointer mr-50"></i>
+                                    </a>
+                                    <div ngbDropdownMenu class="dropdown-menu-right"
+                                        aria-labelledby="dropdownBrowserState">
+                                        <a ngbDropdownItem (click)="deleteItem(row.id)"
+                                            class="d-flex align-items-center"><i data-feather="trash-2"
+                                                class="mr-50"></i> Supprimer</a>
+                                        <a ngbDropdownItem (click)="modalOpenForm(modalForm,row.id)"
+                                            class="d-flex align-items-center"><i data-feather="edit-2"
+                                                class="mr-50"></i> Région</a>
+                                        <!-- Modal -->
+                                        <ng-template #modalForm let-modal>
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="myModalLabel1">Région employee</h4>
+                                                <button type="button" class="close"
+                                                    (click)="modal.dismiss('Cross click')" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body" tabindex="0" ngbAutofocus>
+                                                <form [formGroup]="paymentState_form" (ngSubmit)="onSubmit()">
+                                                    <label>Montant </label>
+                                                    <div class="form-group ">
+                                                        <input type="number" placeholder="Amount"
+                                                            formControlName="amount" class="form-control" />
+                                                    </div>
+                                                    <label>Date de paiemant </label>
+                                                    <div class="form-group ">
+                                                        <ng2-flatpickr [config]="DefaultDateOptions"
+                                                            formControlName="date_payment"
+                                                            name="date_payment"></ng2-flatpickr>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="button" class="btn btn-primary "
+                                                            (click)="addEmplyerState(row.id)" rippleEffect>
+                                                            Ajouter
+                                                        </button>
+                                                    </div>
+
+                                                    <!-- <label>Password: </label>
+                        <div class="form-group">
+                          <input type="password" placeholder="Password" class="form-control" />
+                        </div> -->
+                                                </form>
+                                                <ngx-datatable *ngIf="this.content_loaded == true"
+                                                    class="bootstrap core-bootstrap" [headerHeight]="40"
+                                                    [rowHeight]="58" [limit]="3" [columnMode]="ColumnMode.force"
+                                                    [footerHeight]="50" [rows]="employerStateData" [scrollbarH]="true">
+                                                    <ngx-datatable-column [width]="50" name="Amount" prop="amount">
+                                                        <ng-template ngx-datatable-cell-template let-value="value"
+                                                            let-rowIndex="rowIndex" let-row="row">
+                                                            <div title="Double click to edit">
+                                                                {{ value }}
+                                                            </div>
+                                                        </ng-template>
+                                                    </ngx-datatable-column>
+                                                    <ngx-datatable-column [width]="20" name="Date payment"
+                                                        prop="date_payment">
+                                                        <ng-template ngx-datatable-cell-template let-value="value"
+                                                            let-rowIndex="rowIndex" let-row="row">
+                                                            <div title="Double click to edit">
+                                                                {{ value | date }}
+                                                            </div>
+                                                        </ng-template>
+                                                    </ngx-datatable-column>
+
+
+                                                    <ngx-datatable-column name="Actions" [width]="20"
+                                                        [sortable]="false">
+                                                        <ng-template ngx-datatable-cell-template let-value="value"
+                                                            let-rowIndex="rowIndex" let-row="row">
+                                                            <div class="d-flex align-items-center">
+
+                                                                <a (click)="deleteItemSate(row)">
+                                                                    <i data-feather="trash-2"
+                                                                        class="text-danger cursor-pointer"></i>
+                                                                </a>
+                                                            </div>
+                                                        </ng-template>
+                                                    </ngx-datatable-column>
+                                                </ngx-datatable>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger"
+                                                    (click)="modal.close('Accept click')" rippleEffect>
+                                                    Annuler
+                                                </button>
+                                            </div>
+                                        </ng-template>
+                                        <!-- / Modal -->
+                                    </div>
+                                </div>
+                                <a (click)="setItemSideBar(row.id)">
+                                    <i data-feather="edit" class="text-primary cursor-pointer"></i>
+                                </a>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable>
+
+                <!-- loading Card -->
+                <div class="card h-100 shadow-none" *ngIf="this.content_loaded == false">
+                    <div class="card-body d-flex justify-content-center align-items-center ">
+                        <app-loading-card></app-loading-card>
+                    </div>
+                </div>
+                <!-- / loading Card -->
+            </div>
+        </section>
+
+        <!-- New Sidebar -->
+        <core-sidebar class="modal modal-slide-in sidebar-todo-modal fade" name="employers-sidebar-right"
+            overlayClass="modal-backdrop">
+            <app-employer-sidebar-right (addEvent)="receiveAdd($event)"
+                (editEvent)="receiveEdit($event)"></app-employer-sidebar-right>
+        </core-sidebar>
+        <!--/ New Sidebar -->
+    </div>
+</div>

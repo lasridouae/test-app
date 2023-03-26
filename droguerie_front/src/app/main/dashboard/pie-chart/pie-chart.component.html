@@ -1,0 +1,42 @@
+    <!-- Sales Polygon Chart Card -->
+    <div class="row">
+        <div class="col-12">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-start pb-1">
+            <div>
+              <h4 class="card-title mb-25">{{title}}</h4>
+              <!-- <p class="card-text">Last 6 months</p> -->
+            </div>
+            <i data-feather="more-vertical" class="font-medium-3 cursor-pointer"></i>
+          </div>
+          <div class="card-body">
+            <div id="donut-chart" #apexDonutChartRef>
+                <apx-chart
+                  [series]="apexDonutChart.series"
+                  [chart]="{
+                    height: 600,
+                    width: isMenuToggled === false ? apexDonutChartRef.offsetWidth : apexDonutChart.chart.width,
+                    type: 'donut'
+                  }"
+                  [labels]="apexDonutChart.labels"
+                  [plotOptions]="apexDonutChart.plotOptions"
+                  [responsive]="apexDonutChart.responsive"
+                  [colors]="apexDonutChart.colors"
+                  [legend]="apexDonutChart.legend"
+                ></apx-chart>
+              </div>
+            <!-- <canvas
+            baseChart
+            class="polar-area-chart-ex chartjs"
+            height="350"
+            [datasets]="polarAreaChart.datasets"
+            [labels]="polarAreaChart.labels"
+            [options]="polarAreaChart.options"
+            [chartType]="polarAreaChart.chartType"
+          ></canvas> -->
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <!--/ Sales Polygon Chart Card -->

@@ -1,0 +1,300 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <!-- content-header component -->
+        <app-content-header [contentHeader]="contentHeader"></app-content-header>
+
+        <!-- account setting page -->
+        <section id="page-account-settings">
+            <div class="row nav-vertical d-flex" *ngIf="this.content_loaded == true" >
+                <div class="col-md-3 mb-2 mb-md-0">
+                    <ul ngbNav #navVertical="ngbNav" class="nav nav-pills flex-column nav-left">
+                        <li class="nav-item" ngbNavItem>
+                            <a ngbNavLink class="nav-link d-flex py-75" id="account-pill-general" data-toggle="pill"
+                                href="#account-vertical-general" aria-expanded="true">
+                                <i data-feather="user" class="font-medium-3 mr-1"></i>
+                                <span class="font-weight-bold">Général</span>
+                            </a>
+                            <ng-template ngbNavContent>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <!-- header media -->
+                                        <div class="media">
+                                            <a href="javascript:void(0);" class="mr-25">
+                                                <img [src]="this.preview ? this.preview : this.user.avatare ? USER_IMAGE_PATH + this.user.avatare : 'assets/images/default_images/simple_user.png'"
+                                                    class="rounded mr-50" alt="profile image" height="76" width="80" />
+                                            </a>
+                                            <!-- upload and reset button -->
+                                            <div class="media-body mt-75 ml-1">
+                                                <button (click)="file.click()" for="account-upload"
+                                                    class="btn btn-sm btn-primary mb-75 mr-75" rippleEffect>
+                                                    Upload
+                                                </button>
+                                                <input type="file" #file id="account-upload" hidden accept="image/*"
+                                                    (change)="selectFile($event)" />
+                                                <!-- <button class="btn btn-sm btn-outline-secondary mb-75" rippleEffect>Reset</button> -->
+                                                <p>Charger JPG, GIF or PNG. Taille Max 800kB</p>
+                                            </div>
+                                            <!--/ upload and reset button -->
+                                        </div>
+
+                                        <div id="" class="mt-1" *ngIf="uploading">
+                                            <div class="progress-wrapper">
+                                                <div class="mb-25">Uploading &hellip; {{ this.progress }}%</div>
+                                                <ngb-progressbar type="primary"
+                                                    [value]="this.progress"></ngb-progressbar>
+                                            </div>
+                                        </div>
+                                        <!--/ header media -->
+
+                                        <!-- form -->
+                                        <form class="validate-form mt-2" *ngIf="(content_loaded == true && this.user)"
+                                            (ngSubmit)="(UserGeneralForm.form.valid)" #UserGeneralForm="ngForm">
+                                            <div class="row">
+                                                <div class="col-12 col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="name">Nom complet</label>
+                                                        <input type="text" [(ngModel)]="this.user.name"
+                                                            class="form-control" id="name" name="name"
+                                                            placeholder="Full Name"
+                                                            [class.error]="UserGeneralForm.submitted && FNameRef.invalid"
+                                                            #FNameRef="ngModel" required aria-label="Full Name"
+                                                            aria-describedby="basic-icon-default-name2" />
+                                                        <span *ngIf="UserGeneralForm.submitted && FNameRef.invalid"
+                                                            class="invalid-form">
+                                                            <small class="form-text text-danger"
+                                                                *ngIf="FNameRef.errors.required">Ce champ est obligatoire!</small>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="name">Email</label>
+                                                        <input type="email" [(ngModel)]="this.newEmail"
+                                                            class="form-control" id="email" name="email"
+                                                            placeholder="Email"
+                                                            [class.error]="UserGeneralForm.submitted && FEmailRef.invalid"
+                                                            #FEmailRef="ngModel" required aria-label="Email"
+                                                            aria-describedby="basic-icon-default-name2" />
+                                                        <span *ngIf="UserGeneralForm.submitted && FEmailRef.invalid"
+                                                            class="invalid-form">
+                                                            <small class="form-text text-danger"
+                                                                *ngIf="FEmailRef.errors.required">Ce champ est obligatoire!</small>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="status">Status</label>
+                                                        <select id="status" class="form-control"
+                                                            placeholder="Status of User" name="status" disabled>
+                                                            <option
+                                                                [selected]="this.user.status === 1 ? true : false"
+                                                                value="1">Activer</option>
+                                                            <option
+                                                                [selected]="this.user.status === 0 ? true : false"
+                                                                value="0">Déactiver</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="role">Role</label>
+                                                        <select id="role" class="form-control"
+                                                            placeholder="Select Role of User" name="role" disabled>
+                                                            <option
+                                                                [selected]="this.user.role_user.role === 'admin' ? true : false"
+                                                                value="admin">Admin</option>
+                                                            <option
+                                                                [selected]="this.user.role_user.role === 'manager' ? true : false"
+                                                                value="manager">Manager</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="col-12 mt-75">
+                                                    <div class="alert alert-warning mb-50" role="alert">
+                                                        <h4 class="alert-heading">Your email is not confirmed. Please
+                                                            check your inbox.</h4>
+                                                        <div class="alert-body">
+                                                            <a href="javascript: void(0);" class="alert-link">Resend
+                                                                confirmation</a>
+                                                        </div>
+                                                    </div>
+                                                </div> -->
+                                                <div class="col-12">
+                                                    <button type="submit" class="btn btn-primary mt-2 mr-1" rippleEffect
+                                                        [disabled]="uploading"
+                                                        (click)="editProfileGeneral(UserGeneralForm)">Enregister les modifications</button>
+                                                    <button type="reset" class="btn btn-outline-secondary mt-2"
+                                                        [disabled]="uploading" routerLink="/"
+                                                        rippleEffect>Annuler</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <!--/ form -->
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </li>
+                        <li class="nav-item" ngbNavItem>
+                            <a ngbNavLink class="nav-link d-flex py-75" id="account-pill-password" data-toggle="pill"
+                                href="#account-vertical-password" aria-expanded="false">
+                                <i data-feather="lock" class="font-medium-3 mr-1"></i>
+                                <span class="font-weight-bold">Modifier Password</span>
+                            </a>
+                            <ng-template ngbNavContent>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <!-- form -->
+                                        <form class="validate-form" *ngIf="(content_loaded == true && this.user)"
+                                        (ngSubmit)="(UserPasswordForm.form.valid)" #UserPasswordForm="ngForm">
+                                            <div class="row">
+                                                <div class="col-12 col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="old-password">Ancien Password</label>
+                                                        <div class="input-group form-password-toggle input-group-merge">
+                                                            <input [type]="passwordTextTypeOld ? 'text' : 'password'"
+                                                                class="form-control" id="old-password"
+                                                                name="password" placeholder="Old Password" 
+                                                                [(ngModel)]="this.OldPassword"
+                                                                [class.error]="UserPasswordForm.submitted && FOldPasswordRef.invalid"
+                                                                #FOldPasswordRef="ngModel" required aria-label="New Password" aria-describedby="basic-icon-default-name2"/>
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text cursor-pointer"><i
+                                                                        class="feather font-small-4" [ngClass]="{
+                                        'icon-eye-off': passwordTextTypeOld,
+                                        'icon-eye': !passwordTextTypeOld
+                                      }" (click)="togglePasswordTextTypeOld()"></i></span>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <span *ngIf="UserPasswordForm.submitted && FOldPasswordRef.invalid" class="invalid-form">
+                                                            <small class="form-text text-danger" *ngIf="FOldPasswordRef.errors.required">Ce champ est obligatoire!</small>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12 col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="new-password">Nouveau Password</label>
+                                                        <div class="input-group form-password-toggle input-group-merge">
+                                                            <input [type]="passwordTextTypeNew ? 'text' : 'password'"
+                                                                id="new-password" name="new-password"
+                                                                class="form-control" placeholder="New Password"  
+                                                                [(ngModel)]="this.NewPassword" 
+                                                                [class.error]="UserPasswordForm.submitted && FNewPasswordRef.invalid"
+                                                                #FNewPasswordRef="ngModel" required aria-label="New Password" aria-describedby="basic-icon-default-name2"/>
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text cursor-pointer"><i
+                                                                        class="feather font-small-4" [ngClass]="{
+                                        'icon-eye-off': passwordTextTypeNew,
+                                        'icon-eye': !passwordTextTypeNew
+                                      }" (click)="togglePasswordTextTypeNew()"></i></span>
+                                                            </div>
+                                                        </div>
+                                                        <span *ngIf="UserPasswordForm.submitted && FNewPasswordRef.invalid" class="invalid-form">
+                                                            <small class="form-text text-danger" *ngIf="FNewPasswordRef.errors.required">Ce champ est obligatoire!</small>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="retype-new-password">Resaisie nouveau password</label>
+                                                        <div class="input-group form-password-toggle input-group-merge">
+                                                            <input [type]="passwordTextTypeRetype ? 'text' : 'password'"
+                                                                class="form-control" id="retype-new-password"
+                                                                name="confirm-new-password"
+                                                                placeholder="Retype New Password"   
+                                                                [(ngModel)]="this.RetypeNewPassword" 
+                                                                [class.error]="UserPasswordForm.submitted && FRetypePasswordRef.invalid"
+                                                                #FRetypePasswordRef="ngModel" required aria-label="Retype New Password" aria-describedby="basic-icon-default-name2"/>
+                                                            
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text cursor-pointer"><i
+                                                                        class="feather font-small-4" [ngClass]="{
+                                        'icon-eye-off': passwordTextTypeRetype,
+                                        'icon-eye': !passwordTextTypeRetype
+                                      }" (click)="togglePasswordTextTypeRetype()"></i></span>
+                                                            </div>
+                                                        </div>
+                                                        <span *ngIf="UserPasswordForm.submitted && FRetypePasswordRef.invalid" class="invalid-form">
+                                                            <small class="form-text text-danger" *ngIf="FRetypePasswordRef.errors.required">Ce champ est obligatoire!</small>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                  <button type="submit" class="btn btn-primary mt-2 mr-1" rippleEffect [disabled]="uploading"
+                                                    (click)="editProfilePassword(UserPasswordForm)">Enregister les modifications</button>
+                                                  <button type="reset" class="btn btn-outline-secondary mt-2" rippleEffect [disabled]="uploading"
+                                                    routerLink="/users/list">Annuler</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <!--/ form -->
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </li>
+                        <li class="nav-item" ngbNavItem>
+                            <a ngbNavLink class="nav-link d-flex py-75" id="account-pill-info" data-toggle="pill"
+                                href="#account-vertical-info" aria-expanded="false">
+                                <i data-feather="info" class="font-medium-3 mr-1"></i>
+                                <span class="font-weight-bold">Informations</span>
+                            </a>
+                            <ng-template ngbNavContent>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <!-- form -->
+                                        <form class="validate-form" *ngIf="(content_loaded == true && this.user)"
+                                        (ngSubmit)="(UserInfoForm.form.valid)" #UserInfoForm="ngForm">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                      <label class="form-label" for="adresse">Adresse</label>
+                                                      <textarea class="form-control dt-adresse" id="adresse" rows="3" placeholder="Adresse of user"
+                                                        name="adresse" [(ngModel)]="this.user.adresse">{{this.user.adresse}}</textarea>
+                                                    </div>
+                                                  </div>
+                                                  <div class="col-12 col-sm-6">
+                                                    <div class="form-group">
+                                                      <label for="cin">CIN</label>
+                                                      <input type="text" [(ngModel)]="this.user.cin" class="form-control" id="cin" name="cin"
+                                                        placeholder="BH------" />
+                                                    </div>
+                                                  </div>
+                                                  <div class="col-12 col-sm-6">
+                                                    <div class="form-group">
+                                                      <label for="name">Téléphone</label>
+                                                      <input type="tel" [(ngModel)]="this.user.phone" class="form-control" id="phone" name="phone"
+                                                        placeholder="Phone" />
+                                                    </div>
+                                                  </div>
+                                                  <div class="col-12">
+                                                    <button type="submit" class="btn btn-primary mt-2 mr-1" rippleEffect [disabled]="uploading"
+                                                      (click)="editProfileInfo(UserInfoForm)">Enregister modifications</button>
+                                                    <button type="reset" class="btn btn-outline-secondary mt-2" rippleEffect [disabled]="uploading"
+                                                      routerLink="/users/list">Annuler</button>
+                                                  </div>
+                                            </div>
+                                        </form>
+                                        <!--/ form -->
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </li>
+                    </ul>
+                </div>
+                <div [ngbNavOutlet]="navVertical" class="col-12 col-md-9"></div>
+            </div>
+
+            <!-- loading Card -->
+            <div class="card h-100 shadow-none" *ngIf="this.content_loaded == false">
+                <div class="card-body d-flex justify-content-center align-items-center ">
+                    <app-loading-card></app-loading-card>
+                </div>
+            </div>
+            <!-- / loading Card -->
+        </section>
+        <!--/ account setting page -->
+    </div>
+</div>
